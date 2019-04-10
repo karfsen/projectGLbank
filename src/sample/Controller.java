@@ -21,6 +21,7 @@ public class Controller {
         }
         else{
             wrong.setVisible(false);
+
         }
     }
 }
