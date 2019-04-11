@@ -1,4 +1,4 @@
-package sample.Database;
+package sample.database;
 
 import sample.Employee;
 import sample.Globals;
@@ -30,7 +30,7 @@ public class Database {
         Connection con= Globals.getConnection();
         PreparedStatement sqlPreparedStatement = null;
 
-        sqlPreparedStatement = con.prepareStatement(checkUser );
+        sqlPreparedStatement = con.prepareStatement(checkUser);
         sqlPreparedStatement.setString(1,username);
         sqlPreparedStatement.setString(2,password);
 
