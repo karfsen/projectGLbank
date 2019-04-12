@@ -23,43 +23,75 @@
             <Font name="Comfortaa" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="nameLabel" layoutX="1054.0" layoutY="14.0">
-         <font>
-            <Font name="Comfortaa-Bold" size="15.0" />
-         </font>
-      </Label>
       <Button fx:id="logoutB" layoutX="1214.0" layoutY="14.0" mnemonicParsing="false" onAction="#logout" prefHeight="52.0" prefWidth="52.0" text="logout">
          <font>
             <Font name="Comfortaa" size="11.0" />
          </font></Button>
       <Label fx:id="eposition" layoutX="1053.0" layoutY="35.0">
          <font>
-            <Font name="Comfortaa-Bold" size="10.0" />
+            <Font name="Comfortaa-Bold" size="14.0" />
          </font>
       </Label>
       <Button layoutX="405.0" layoutY="122.0" mnemonicParsing="false" text="New Client">
          <font>
             <Font name="Comfortaa" size="12.0" />
          </font></Button>
-      <ComboBox fx:id="client_dropdown" layoutX="275.0" layoutY="121.0" prefHeight="25.0" prefWidth="103.0" promptText="Clients" />
+      <ComboBox fx:id="client_dropdown" layoutX="275.0" layoutY="121.0" onAction="#clientInfo" prefHeight="25.0" prefWidth="103.0" promptText="Clients" />
       <TabPane layoutX="113.0" layoutY="174.0" prefHeight="477.0" prefWidth="1054.0" style="-fx-background-color: #E6E6E6;" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Client">
+          <Tab fx:id="clienttab" text="Client">
             <content>
-              <AnchorPane maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #E6E6E6;">
+                     <children>
+                        <Label layoutX="407.0" layoutY="190.0" style="-fx-background-color: #E6E6E6;" text="Name:">
+                           <font>
+                              <Font name="Comfortaa-Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="406.0" layoutY="224.0" style="-fx-background-color: #E6E6E6;" text="E-mail:">
+                           <font>
+                              <Font name="Comfortaa-Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="354.0" style="-fx-background-color: #E6E6E6;" text="CLIENT INFO">
+                           <font>
+                              <Font name="Comfortaa-Bold" size="48.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="404.0" layoutY="159.0" style="-fx-background-color: #E6E6E6;" text="Client ID:">
+                           <font>
+                              <Font name="Comfortaa-Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="idLabel" layoutX="469.0" layoutY="157.0" style="-fx-background-color: #E6E6E6;" text="Label">
+                           <font>
+                              <Font name="Comfortaa" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="clientNameLabel" layoutX="469.0" layoutY="190.0" style="-fx-background-color: #E6E6E6;" text="Label">
+                           <font>
+                              <Font name="Comfortaa" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="mailLabel" layoutX="469.0" layoutY="226.0" text="Label">
+                           <font>
+                              <Font name="Comfortaa" size="18.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
             </content>
           </Tab>
-          <Tab text="Accounts">
+          <Tab fx:id="acctab" text="Accounts">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </Tab>
-            <Tab text="Cards">
+            <Tab fx:id="cardstab" text="Cards">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
-            <Tab text="Internet Banking">
+            <Tab fx:id="ibtab" text="Internet Banking">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
@@ -71,5 +103,10 @@
             </Tab>
         </tabs>
       </TabPane>
+      <Label fx:id="nameLabel" layoutX="1054.0" layoutY="14.0">
+         <font>
+            <Font name="Comfortaa-Bold" size="15.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.Stage;
 import mainpckg.Client;
 import mainpckg.Employee;
@@ -32,6 +33,9 @@ public class AppController {
     public Label eposition;
     public Button logoutB;
     public ComboBox client_dropdown;
+    public Label clientNameLabel;
+    public Label mailLabel;
+    public Label idLabel;
     Employee person;
 
     public void initialize() throws SQLException {
@@ -69,9 +73,21 @@ public class AppController {
         ArrayList<Client> clients=db.getAllClients();
         ObservableList<String> olist=FXCollections.observableArrayList();
         for(int i=0;i<clients.size();i++){
-            olist.add(clients.get(i).id+" "+clients.get(i).fname+" "+clients.get(i).lname);
+            olist.add(clients.get(i).fname+" "+clients.get(i).lname);
         }
-        System.out.println(clients.get(0).id);
         client_dropdown.setItems(olist);
+    }
+
+    public void clientInfo() throws SQLException {
+        Database db=Database.getInstance();
+        Client selectedUser=db.getClientInfo(getIDofSelected()+1);
+        clientNameLabel.setText(selectedUser.fname+" "+selectedUser.lname);
+        mailLabel.setText(selectedUser.email);
+        idLabel.setText(String.valueOf(selectedUser.id));
+    }
+
+    public int getIDofSelected() {
+        System.out.println(client_dropdown.getSelectionModel().getSelectedIndex());
+        return client_dropdown.getSelectionModel().getSelectedIndex();
     }
 }

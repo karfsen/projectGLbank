@@ -1,5 +1,6 @@
 package mainpckg.database;
 
+import mainpckg.Account;
 import mainpckg.Client;
 import mainpckg.Employee;
 import mainpckg.Globals;
@@ -14,6 +15,8 @@ public class Database {
 
     public static final String checkUser="SELECT Employee.id as id,Employee.fname as fname,Employee.lname as lname,Positions.name as posname from LoginEmp INNER JOIN Employee on LoginEmp.ide=Employee.id INNER JOIN Positions on Employee.position=Positions.id where login like ? and password like ?";
     public static final String getClients="SELECT id,fname,lname from Client";
+    public static final String getClientInfo="Select id,fname,lname,email from Client where id=?";
+    public static final String getUserAccounts="SELECT * from Account where idc=?";
     private static Database db = new Database();
 
     private Database(){
@@ -55,6 +58,61 @@ public class Database {
         }
     }
 
+    public Client getClientInfo(int id) throws SQLException {
+        String fname="";
+        String lname="";
+        String email="";
+
+        Connection con=Globals.getConnection();
+        PreparedStatement sql=null;
+        sql = con.prepareStatement(getClientInfo);
+        sql.setString(1, String.valueOf(id));
+
+        ResultSet rs = sql.executeQuery();
+        while (rs.next()) {
+            fname = rs.getString("fname");
+            lname = rs.getString("lname");
+            email = rs.getString("email");
+        }
+        if(fname!=""&&id!=0&&lname!=""&&email!="") {
+
+            System.out.println(id + " " + fname + " " + lname + " " + email);
+            return new Client(id, fname, lname, email);
+        }
+        else{
+            return null;
+        }
+    }
+
+    public ArrayList<Account> getAccsOfClient(int id) throws SQLException {
+        int ida=0;
+        int idc=0;
+        String AccNum="";
+        double amount=0.0;
+
+        ArrayList<Account> accs=new ArrayList<>();
+        Connection con=Globals.getConnection();
+        PreparedStatement sql=null;
+        try {
+            sql = con.prepareStatement(getUserAccounts);
+            sql.setInt(1, id);
+
+            ResultSet rs = sql.executeQuery();
+
+            while (rs.next()) {
+                ida = rs.getInt("id");
+                idc = rs.getInt("idc");
+                AccNum = rs.getString("accnum");
+                amount = rs.getDouble("amount");
+                Account acc = new Account(ida, idc, AccNum, amount);
+                accs.add(acc);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return accs;
+    }
+
     public ArrayList<Client> getAllClients() throws SQLException {
         ArrayList<Client> clients=new ArrayList<>();
         Connection con= Globals.getConnection();
@@ -74,7 +132,6 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(clients);
         return clients;
     }
 }
