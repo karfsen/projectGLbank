@@ -1,16 +1,19 @@
-package sample.database;
+package mainpckg.database;
 
-import sample.Employee;
-import sample.Globals;
+import mainpckg.Client;
+import mainpckg.Employee;
+import mainpckg.Globals;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
 
     public static final String checkUser="SELECT Employee.id as id,Employee.fname as fname,Employee.lname as lname,Positions.name as posname from LoginEmp INNER JOIN Employee on LoginEmp.ide=Employee.id INNER JOIN Positions on Employee.position=Positions.id where login like ? and password like ?";
-
+    public static final String getClients="SELECT id,fname,lname from Client";
     private static Database db = new Database();
 
     private Database(){
@@ -50,6 +53,28 @@ public class Database {
         else{
             return null;
         }
+    }
 
+    public ArrayList<Client> getAllClients() throws SQLException {
+        ArrayList<Client> clients=new ArrayList<>();
+        Connection con= Globals.getConnection();
+        PreparedStatement sqlPreparedStatement;
+
+        try {
+            sqlPreparedStatement = con.prepareStatement(getClients);
+            ResultSet rs = sqlPreparedStatement.executeQuery();
+            while (rs.next()) {
+                int id=rs.getInt("id");
+                String fname = rs.getString("fname");
+                String lname = rs.getString("lname");
+                Client client=new Client(id,fname,lname);
+                clients.add(client);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(clients);
+        return clients;
     }
 }

@@ -1,4 +1,4 @@
-package sample;
+package mainpckg;
 
 public class Employee {
     public String fname;
