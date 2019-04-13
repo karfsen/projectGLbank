@@ -20,7 +20,7 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane focusTraversable="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: white;">
+      <Pane focusTraversable="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #ff8000;">
          <children>
             <Button fx:id="logBut" layoutX="582.0" layoutY="433.0" mnemonicParsing="false" onAction="#login" prefHeight="59.0" prefWidth="116.0" text="Login">
                <font>

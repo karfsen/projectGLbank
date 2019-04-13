@@ -17,6 +17,7 @@ public class Database {
     public static final String getClients="SELECT id,fname,lname from Client";
     public static final String getClientInfo="Select id,fname,lname,email from Client where id=?";
     public static final String getUserAccounts="SELECT * from Account where idc=?";
+    public static final String getSelectedAccount="SELECT * from Account where id=?";
     private static Database db = new Database();
 
     private Database(){
@@ -111,6 +112,33 @@ public class Database {
             e.printStackTrace();
         }
         return accs;
+    }
+
+    public Account getSelectedAccOfClient(int id) throws SQLException {
+        int ida=0;
+        int idc=0;
+        String AccNum="";
+        double amount=0.0;
+        Account acc=null;
+        Connection con=Globals.getConnection();
+        PreparedStatement sql=null;
+        try {
+            sql = con.prepareStatement(getSelectedAccount);
+            sql.setInt(1, id);
+
+            ResultSet rs = sql.executeQuery();
+
+            while (rs.next()) {
+                ida = rs.getInt("id");
+                idc = rs.getInt("idc");
+                AccNum = rs.getString("accnum");
+                amount = rs.getDouble("amount");
+                acc= new Account(ida, idc, AccNum, amount);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return acc;
     }
 
     public ArrayList<Client> getAllClients() throws SQLException {
