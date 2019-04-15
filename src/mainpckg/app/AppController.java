@@ -13,10 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.Stage;
-import mainpckg.Account;
-import mainpckg.Client;
-import mainpckg.Employee;
-import mainpckg.Globals;
+import mainpckg.*;
 import mainpckg.database.Database;
 
 import javax.xml.crypto.Data;
@@ -25,6 +22,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+
 
 public class AppController {
 
@@ -43,11 +42,15 @@ public class AppController {
     public Label accNumLabel;
     public Label accIdLabel;
     public TabPane tabpane;
+    public Label newacc;
+    public ComboBox cardaccdrop;
+    public ComboBox card_drop;
 
     //variables and lists storing data
     Employee person;
     ArrayList<Client> clients;
     ArrayList<Account> accounts;
+    ArrayList<Card> cards;
 
     //function that initializes method dropdown(renders all clients into combobox )at the start of this window
 
@@ -106,6 +109,7 @@ public class AppController {
         idLabel.setText(String.valueOf(selectedUser.id));
         tabpane.setVisible(true);
         AccDropDown();
+        dropdown();
     }
 
     //method for select id of picked item in dropdown menu
@@ -122,6 +126,13 @@ public class AppController {
         return accounts.get(boxindex).id;
     }
 
+
+    public String getIDofSelectedAccountInCards() {
+        int boxindex=cardaccdrop.getSelectionModel().getSelectedIndex();
+        System.out.println(accounts.get(boxindex).id);
+        return accounts.get(boxindex).AccNum;
+    }
+
     //method for set up dropdown menu of accounts of selected user
 
     public void AccDropDown() throws SQLException {
@@ -133,6 +144,8 @@ public class AppController {
             olist.add(accounts.get(i).id+" "+accounts.get(i).AccNum);
         }
         acc_drop.setItems(olist);
+        cardaccdrop.setItems(olist);
+
     }
 
     public void AccInfo() throws SQLException {
@@ -143,5 +156,29 @@ public class AppController {
         accBalLabel.setText(account.amount+" €");
     }
 
+    public void createAccount() throws SQLException {
+        String AccNum;
+        String rand="";
+        for(int i=0;i<10;i++){
+            Random r=new Random();
+            rand=rand+ r.nextInt(10);
+        }
+        AccNum=rand;
+        int idc=getIDofSelectedClient();
+        Database db=Database.getInstance();
+        String rs=db.insertNewAccount(idc,AccNum);
+        System.out.println(idc+" "+AccNum+" "+rs);
+        newacc.setText(rs);
+        AccDropDown();
+    }
 
+    public void CardDropdown() {
+        Database db=Database.getInstance();
+        cards=db.AllCards(getIDofSelectedAccountInCards());
+        ObservableList<String> olist=FXCollections.observableArrayList();
+        for(int i=0;i<cards.size();i++){
+            olist.add(String.valueOf(cards.get(i).getId()));
+        }
+        card_drop.setItems(olist);
+    }
 }

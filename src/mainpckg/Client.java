@@ -1,7 +1,5 @@
 package mainpckg;
 
-import javafx.collections.ObservableArray;
-
 public class Client {
     public String fname;
     public int id;

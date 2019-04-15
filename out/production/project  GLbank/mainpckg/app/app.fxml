@@ -50,7 +50,7 @@
                </font>
             </Button>
             <ComboBox fx:id="client_dropdown" layoutX="275.0" layoutY="121.0" onAction="#clientInfo" prefHeight="25.0" prefWidth="103.0" promptText="Clients" />
-            <TabPane fx:id="tabpane" layoutX="113.0" layoutY="174.0" prefHeight="477.0" prefWidth="1054.0" style="-fx-background-color: #ff8000;" tabClosingPolicy="UNAVAILABLE" visible="false">
+            <TabPane fx:id="tabpane" layoutX="113.0" layoutY="174.0" prefHeight="477.0" prefWidth="1054.0" style="-fx-background-color: #ff8000;" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Client">
                   <content>
@@ -129,19 +129,25 @@
                                     <Font name="Comfortaa-Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="acc_drop" layoutX="32.0" layoutY="56.0" onAction="#AccInfo" prefHeight="25.0" prefWidth="92.0" promptText="Accounts" />
+                              <ComboBox fx:id="acc_drop" layoutX="32.0" layoutY="56.0" onAction="#AccInfo" prefHeight="25.0" prefWidth="103.0" promptText="Accounts" />
                               <Label fx:id="accBalLabel" layoutX="496.0" layoutY="243.0" style="-fx-background-color: #E6E6E6;">
                                  <font>
                                     <Font name="Comfortaa" size="18.0" />
                                  </font>
                               </Label>
+                              <Button layoutX="889.0" layoutY="56.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="25.0" prefWidth="103.0" text="Create Account" />
+                              <Label fx:id="newacc" layoutX="861.0" layoutY="95.0" />
                            </children>
                         </AnchorPane>
                   </content>
                 </Tab>
                   <Tab text="Cards">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #E6E6E6;" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #E6E6E6;">
+                           <children>
+                              <ComboBox fx:id="cardaccdrop" layoutX="37.0" layoutY="46.0" onAction="#CardDropdown" prefWidth="150.0" promptText="Account" />
+                              <ComboBox fx:id="card_drop" layoutX="37.0" layoutY="93.0" prefWidth="150.0" promptText="Card" />
+                           </children></AnchorPane>
                     </content>
                   </Tab>
                   <Tab text="Internet Banking">

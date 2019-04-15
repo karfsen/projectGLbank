@@ -1,9 +1,8 @@
 package mainpckg.database;
 
-import mainpckg.Account;
-import mainpckg.Client;
-import mainpckg.Employee;
-import mainpckg.Globals;
+import mainpckg.*;
+
+import javax.print.DocFlavor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,12 @@ public class Database {
     public static final String getClientInfo="Select id,fname,lname,email from Client where id=?";
     public static final String getUserAccounts="SELECT * from Account where idc=?";
     public static final String getSelectedAccount="SELECT * from Account where id=?";
+    public static final String checkAccNum="SELECT * from Account where AccNum=?";
+    public static final String insertAcc="INSERT into Account VALUES(id,?,?,amount)";
+    public static final String getAccCards="SELECT * from Card INNER JOIN Account on card.ida=account.id where account.accnum like ?";
+
+
+
     private static Database db = new Database();
 
     private Database(){
@@ -161,5 +166,71 @@ public class Database {
             e.printStackTrace();
         }
         return clients;
+    }
+
+
+    public String insertNewAccount(int idc,String AccNum){
+        String result = null;
+        if(AccNum.length()==10){
+            Connection con= Globals.getConnection();
+            PreparedStatement sqlPreparedStatement;
+            try {
+                sqlPreparedStatement = con.prepareStatement(checkAccNum);
+                sqlPreparedStatement.setString(1,AccNum);
+                ResultSet rs=sqlPreparedStatement.executeQuery();
+                if(rs.next()){
+                    result="Account number already exists!";
+                }
+                else{
+                    PreparedStatement stmn=con.prepareStatement(insertAcc);
+                    stmn.setInt(1,idc);
+                    stmn.setString(2,AccNum);
+                    stmn.execute();
+                    result="New account: "+AccNum;
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        else{
+            result="Long or short acc num";
+        }
+        return result;
+    }
+
+    public ArrayList<Card> AllCards(String AccNum){
+        ArrayList<Card> cards=new ArrayList<>();
+
+        Connection con= Globals.getConnection();
+        PreparedStatement sqlPreparedStatement;
+
+        try {
+            sqlPreparedStatement = con.prepareStatement(getAccCards);
+            sqlPreparedStatement.setString(1,AccNum);
+            ResultSet rs = sqlPreparedStatement.executeQuery();
+            while (rs.next()) {
+                int id=rs.getInt("id");
+                String  accnum=AccNum;
+                String PIN = rs.getString("pin");
+                boolean active  = rs.getBoolean("active");
+                String m= String.valueOf(rs.getInt("expirem"));
+                String y=String.valueOf(rs.getInt("expirey"));
+                if(Integer.valueOf(m)<10) {
+                    m="0"+m;
+                }
+                if(Integer.valueOf(y)<10){
+                    y="0"+y;
+                }
+                String expireDate=m+"/"+y;
+                Card card=new Card(id,accnum,PIN,active,expireDate);
+                cards.add(card);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cards;
+
     }
 }
