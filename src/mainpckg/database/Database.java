@@ -1,14 +1,11 @@
 package mainpckg.database;
 
 import mainpckg.*;
-
-import javax.print.DocFlavor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Database {
 
@@ -20,7 +17,8 @@ public class Database {
     public static final String checkAccNum="SELECT * from Account where AccNum=?";
     public static final String insertAcc="INSERT into Account VALUES(id,?,?,amount)";
     public static final String getAccCards="SELECT * from Card INNER JOIN Account on card.ida=account.id where account.accnum like ?";
-
+    public static final String updateMoney="UPDATE Account set amount=amount+? where AccNum like ?";
+    public static final String insertintotrans="INSERT INTO Transaction values(id,?,?,?,TransDate,TransAmount";
 
 
     private static Database db = new Database();
@@ -198,6 +196,28 @@ public class Database {
         }
         return result;
     }
+
+    public void updateAccMoney(int empID,int id,String AccNum,double money){
+
+        Connection con= Globals.getConnection();
+        PreparedStatement updatemoney;
+
+        try {
+            updatemoney = con.prepareStatement(updateMoney);
+            updatemoney.setDouble(1,money);
+            updatemoney.setString(2,AccNum);
+            updatemoney.executeUpdate();
+            PreparedStatement inserttrans=con.prepareStatement(insertintotrans);
+            inserttrans.setInt(1,id);
+            inserttrans.setInt(2,id);
+            inserttrans.setInt(3,empID);
+            inserttrans.execute();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public ArrayList<Card> AllCards(String AccNum){
         ArrayList<Card> cards=new ArrayList<>();

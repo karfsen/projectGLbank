@@ -53,6 +53,15 @@ public class AppController {
     public Label activeLabel;
     public Button newClient;
 
+    //transaction tab
+    public TextField depositInput;
+    public CheckBox depositCheck;
+    public TextField withdrawInput;
+    public CheckBox withdrawCheck;
+    public ComboBox transactionDropdown;
+    public Label notCheckedDep;
+    public Label notCheckedWithdraw;
+
     //variables and lists storing data
     Employee person=null;
     ArrayList<Client> clients;
@@ -156,6 +165,7 @@ public class AppController {
         }
         acc_drop.setItems(olist);
         cardaccdrop.setItems(olist);
+        transactionDropdown.setItems(olist);
 
     }
 
@@ -220,7 +230,7 @@ public class AppController {
         expireLabel.setText(cards.get(getIDofSelectedCard()).getExpireDate());
     }
 
-    public void createClient(ActionEvent actionEvent) {
+    /*public void createClient(ActionEvent actionEvent) {
         //TODO greeeeat thinks
 
         try {
@@ -234,6 +244,48 @@ public class AppController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+*/
+
+
+    public void depositMoney() {
+        int d =(Integer.parseInt(depositInput.getText()));
+        if (d!=0) {
+            if (depositCheck.isSelected()) {
+                if (Integer.parseInt(depositInput.getText()) < 0) {
+                    d = +d;
+                } else if (Integer.parseInt(depositInput.getText()) > 0) {
+                    d = (Integer.parseInt(depositInput.getText()));
+                }
+                String accnum = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).AccNum;
+                int id = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).id;
+                Database db = Database.getInstance();
+                db.updateAccMoney(person.id, id, accnum, d);
+            }
+            else{
+
+            }
+        }
+    }
+
+    public void withdrawMoney() {
+        int d =(Integer.parseInt(withdrawInput.getText()));
+        if (d!=0) {
+            if (withdrawCheck.isSelected()) {
+                if (Integer.parseInt(withdrawInput.getText()) < 0) {
+                    d = +d;
+                } else if (Integer.parseInt(withdrawInput.getText()) > 0) {
+                    d = (Integer.parseInt(withdrawInput.getText()));
+                }
+                String accnum = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).AccNum;
+                int id = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).id;
+                Database db = Database.getInstance();
+                db.updateAccMoney(person.id, id, accnum, d);
+                notCheckedWithdraw.setVisible(false);
+            } else {
+                notCheckedWithdraw.setVisible(true);
+            }
         }
     }
 }
