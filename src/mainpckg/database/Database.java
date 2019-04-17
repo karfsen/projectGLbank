@@ -18,7 +18,7 @@ public class Database {
     public static final String insertAcc="INSERT into Account VALUES(id,?,?,amount)";
     public static final String getAccCards="SELECT * from Card INNER JOIN Account on card.ida=account.id where account.accnum like ?";
     public static final String updateMoney="UPDATE Account set amount=amount+? where AccNum like ?";
-    public static final String insertintotrans="INSERT INTO Transaction values(id,?,?,?,TransDate,TransAmount";
+    public static final String insertintotrans="INSERT INTO Transaction values(id,?,?,?,TransDate,TransAmount)";
 
 
     private static Database db = new Database();

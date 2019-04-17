@@ -238,15 +238,25 @@
                                     <Font name="Comfortaa-Bold" size="12.0" />
                                  </font>
                               </Button>
-                              <ComboBox fx:id="transactionDropdown" layoutX="452.0" layoutY="31.0" prefWidth="150.0" />
-                              <Label fx:id="notCheckedDep" layoutX="168.0" layoutY="240.0" text="This checkbox must be checked!" textFill="RED">
+                              <ComboBox fx:id="transactionDropdown" layoutX="452.0" layoutY="31.0" prefWidth="150.0" promptText="Accounts" />
+                              <Label fx:id="notCheckedDep" layoutX="168.0" layoutY="240.0" text="This checkbox must be checked!" textFill="RED" visible="false">
                                  <font>
                                     <Font name="Comfortaa-Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="notCheckedWithdraw" layoutX="685.0" layoutY="239.0" text="This checkbox must be checked!" textFill="RED">
+                              <Label fx:id="notCheckedWithdraw" layoutX="685.0" layoutY="239.0" text="This checkbox must be checked!" textFill="RED" visible="false">
                                  <font>
                                     <Font name="Comfortaa-Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="depZero" layoutX="340.0" layoutY="180.0" text="Wrong value!" textFill="RED" visible="false">
+                                 <font>
+                                    <Font name="Comfortaa" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="witZero" layoutX="857.0" layoutY="180.0" text="Wrong value!" textFill="RED" visible="false">
+                                 <font>
+                                    <Font name="Comfortaa" size="12.0" />
                                  </font>
                               </Label>
                            </children></AnchorPane>
