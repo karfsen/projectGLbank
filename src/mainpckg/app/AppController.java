@@ -43,11 +43,18 @@ public class AppController {
     public Label accIdLabel;
     public TabPane tabpane;
     public Label newacc;
+
+    //card tab
     public ComboBox cardaccdrop;
     public ComboBox card_drop;
+    public Label cardIdLabel;
+    public Label pinLabel;
+    public Label expireLabel;
+    public Label activeLabel;
+    public Button newClient;
 
     //variables and lists storing data
-    Employee person;
+    Employee person=null;
     ArrayList<Client> clients;
     ArrayList<Account> accounts;
     ArrayList<Card> cards;
@@ -126,6 +133,10 @@ public class AppController {
         return accounts.get(boxindex).id;
     }
 
+    public int getIDofSelectedCard() {
+        int boxindex=card_drop.getSelectionModel().getSelectedIndex();
+        return boxindex;
+    }
 
     public String getIDofSelectedAccountInCards() {
         int boxindex=cardaccdrop.getSelectionModel().getSelectedIndex();
@@ -153,7 +164,7 @@ public class AppController {
         Account account=db.getSelectedAccOfClient(getIDofSelectedAccount());
         accIdLabel.setText(String.valueOf(account.id));
         accNumLabel.setText(account.AccNum);
-        accBalLabel.setText(account.amount+" €");
+        accBalLabel.setText(Math.round(account.amount*100)/100+"  €");
     }
 
     public void createAccount() throws SQLException {
@@ -180,5 +191,49 @@ public class AppController {
             olist.add(String.valueOf(cards.get(i).getId()));
         }
         card_drop.setItems(olist);
+    }
+
+    public boolean checkPosition(){
+
+        if (person.position.equals("boss")) {
+            System.out.println(true);
+            return true;
+        }
+        else{
+            System.out.println(false);
+            return false;
+        }
+    }
+
+    public void cardInfo() {
+        cardIdLabel.setText(String.valueOf(cards.get(getIDofSelectedCard()).getId()));
+//        System.out.println(person.position);
+//        System.out.println(cards.get(getIDofSelectedCard()));
+        if(checkPosition()==true){
+            pinLabel.setText(cards.get(getIDofSelectedCard()).getPIN());
+//            System.out.println(cards.get(getIDofSelectedCard()).getPIN());
+        }
+        else {
+            pinLabel.setText("****");
+        }
+        activeLabel.setText(String.valueOf(cards.get(getIDofSelectedCard()).isActive()));
+        expireLabel.setText(cards.get(getIDofSelectedCard()).getExpireDate());
+    }
+
+    public void createClient(ActionEvent actionEvent) {
+        //TODO greeeeat thinks
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../login/sample.fxml"));
+            Parent root1;
+            root1 = (Parent) fxmlLoader.load();
+            Stage stage2 = new Stage();
+            stage2.setTitle("GLbanking banker's application");
+            stage2.setScene(new Scene(root1));
+            stage2.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
