@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff8000;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpckg.app.AppController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff8000;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpckg.newclient.addClientController">
    <children>
       <Label layoutX="270.0" layoutY="32.0" text="Label">
          <font>
             <Font name="Comfortaa-Bold" size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fname" layoutX="226.0" layoutY="90.0" />
+      <TextField fx:id="lname" layoutX="225.0" layoutY="143.0" />
+      <TextField layoutX="225.0" layoutY="194.0" />
+      <Label layoutX="151.0" layoutY="95.0" text="First Name">
+         <font>
+            <Font name="Comfortaa" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="151.0" layoutY="148.0" text="Last Name">
+         <font>
+            <Font name="Comfortaa" size="14.0" />
          </font>
       </Label>
    </children>
