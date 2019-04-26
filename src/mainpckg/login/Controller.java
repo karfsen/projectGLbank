@@ -25,8 +25,9 @@ public class Controller {
     public TextField name;
     public PasswordField pw;
 
-    public void login(ActionEvent actionEvent) throws SQLException{
-        employee=Database.checkUser(name.getText(),pw.getText());
+    public void login() throws SQLException{
+        Database db=Database.getInstance();
+        employee=db.checkUser(name.getText(),pw.getText());
         if(employee==null){
             wrong.setVisible(true);
         }

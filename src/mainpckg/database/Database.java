@@ -1,10 +1,8 @@
 package mainpckg.database;
 
 import mainpckg.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
@@ -19,6 +17,12 @@ public class Database {
     public static final String getAccCards="SELECT * from Card INNER JOIN Account on card.ida=account.id where account.accnum like ?";
     public static final String updateMoney="UPDATE Account set amount=amount+? where AccNum like ?";
     public static final String insertintotrans="INSERT INTO Transaction values(id,?,?,?,TransDate,TransAmount)";
+    public static final String newClient="INSERT INTO Client values(id,?,?,?)";
+    public static final String newLogin="INSERT INTO LoginClient values(id,?,?,MD5(?))";
+    public static final String resetPassword="UPDATE LoginClient SET password=MD5(?) WHERE login=?";
+    public static final String selectuser="SELECT login from LoginClient where idc=?";
+    public static final String blockIB="INSERT INTO LoginHistory(idc,Success) VALUES(?,NULL)";
+    public static final String unblockIB="INSERT INTO LoginHistory(idc,Success) VALUES(?,1)";
 
 
     private static Database db = new Database();
@@ -43,13 +47,14 @@ public class Database {
         sqlPreparedStatement = con.prepareStatement(checkUser);
         sqlPreparedStatement.setString(1,username);
         sqlPreparedStatement.setString(2,password);
-
+        //System.out.println(sqlPreparedStatement);
         ResultSet rs = sqlPreparedStatement.executeQuery();
         while (rs.next()) {
             id=rs.getInt("id");
             fname = rs.getString("fname");
             lname = rs.getString("lname");
             position = rs.getString("posname");
+            System.out.println(id+" "+fname+" "+position);
         }
 
         if(fname!=""&&id!=0&&lname!=""&&position!="") {
@@ -251,6 +256,91 @@ public class Database {
             e.printStackTrace();
         }
         return cards;
-
     }
+
+    public void newClient(String fname,String lname,String email,String login,String password){
+        Connection con= Globals.getConnection();
+        PreparedStatement addclient;
+
+        try {
+            addclient=con.prepareStatement(newClient, Statement.RETURN_GENERATED_KEYS);
+            addclient.setString(1,fname);
+            addclient.setString(2,lname);
+            addclient.setString(3,email);
+            addclient.executeUpdate();
+            ResultSet rs=addclient.getGeneratedKeys();
+            int key=0;
+            if(rs.next()){
+                key = rs.getInt(1);
+            }
+            PreparedStatement addLogin=con.prepareStatement(newLogin);
+            addLogin.setInt(1,key);
+            addLogin.setString(2,login);
+            addLogin.setString(3,password);
+            addLogin.execute();
+            con.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String selectUserLogin(int idClient){
+        String username=null;
+        Connection con= Globals.getConnection();
+        PreparedStatement selectusername;
+        try{
+            selectusername=con.prepareStatement(selectuser);
+            selectusername.setInt(1,idClient);
+            ResultSet rs = selectusername.executeQuery();
+            while (rs.next()) {
+                username= rs.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return username;
+    }
+
+    public void resetPW(String username,String pass){
+        Connection con= Globals.getConnection();
+        PreparedStatement resetpw;
+
+        try {
+            resetpw = con.prepareStatement(resetPassword);
+            resetpw.setString(1, pass);
+            resetpw.setString(2, username);
+            System.out.println(resetpw);
+            resetpw.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void blockIB(int idc){
+        Connection con= Globals.getConnection();
+        PreparedStatement blockInBank;
+        try{
+            blockInBank=con.prepareStatement(blockIB);
+            blockInBank.setInt(1,idc);
+            blockInBank.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void unblockIB(int idc){
+        Connection con= Globals.getConnection();
+        PreparedStatement blockInBank;
+        try{
+            blockInBank=con.prepareStatement(unblockIB);
+            blockInBank.setInt(1,idc);
+            blockInBank.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 }

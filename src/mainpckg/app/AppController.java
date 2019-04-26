@@ -15,6 +15,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.Stage;
 import mainpckg.*;
 import mainpckg.database.Database;
+import mainpckg.newclient.AddClientController;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
@@ -64,6 +65,13 @@ public class AppController {
     public Label depZero;
     public Label witZero;
     public Label lowmoney;
+
+    //IB tab
+    public Label username;
+    public CheckBox block;
+    public CheckBox resetCheck;
+    int count=0;
+    public String clientLogin;
 
     //variables and lists storing data
     Employee person = null;
@@ -129,6 +137,8 @@ public class AppController {
         tabpane.setVisible(true);
         AccDropDown();
         dropdown();
+        clientLogin=db.selectUserLogin(getIDofSelectedClient());
+        username.setText(clientLogin);
     }
 
     //method for select id of picked item in dropdown menu
@@ -232,14 +242,13 @@ public class AppController {
     }
 
     public void createClient() {
-        //TODO greeeeat thinks
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../login/sample.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../newclient/newClient.fxml"));
             Parent root1;
             root1 = (Parent) fxmlLoader.load();
             Stage stage2 = new Stage();
-            stage2.setTitle("GLbanking banker's application");
+            stage2.setTitle("GLbanking create new client");
             stage2.setScene(new Scene(root1));
             stage2.show();
 
@@ -317,5 +326,30 @@ public class AppController {
             System.out.println("Cannot go to more debt than -60");
             lowmoney.setVisible(true);
         }
+    }
+
+    public void newCard() {
+
+
+    }
+
+    public void resetPW() {
+        count++;
+        if(count==1){
+            resetCheck.setVisible(true);
+        }
+        if(resetCheck.isSelected()){
+            count=0;
+            AddClientController newpw = new AddClientController();
+            String newpass=newpw.generatePassword();
+            Database db=Database.getInstance();
+            db.resetPW(username.getText(),newpass);
+            resetCheck.setVisible(false);
+        }
+    }
+
+    public void (){
+
+
     }
 }

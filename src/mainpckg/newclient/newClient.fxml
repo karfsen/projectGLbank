@@ -1,29 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff8000;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpckg.newclient.addClientController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff8000;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpckg.newclient.AddClientController">
    <children>
       <Label layoutX="270.0" layoutY="32.0" text="Label">
          <font>
             <Font name="Comfortaa-Bold" size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="fname" layoutX="226.0" layoutY="90.0" />
-      <TextField fx:id="lname" layoutX="225.0" layoutY="143.0" />
-      <TextField layoutX="225.0" layoutY="194.0" />
-      <Label layoutX="151.0" layoutY="95.0" text="First Name">
+      <TextField fx:id="fname" layoutX="226.0" layoutY="78.0" />
+      <TextField fx:id="lname" layoutX="226.0" layoutY="123.0" />
+      <Label layoutX="150.0" layoutY="83.0" text="First Name">
          <font>
             <Font name="Comfortaa" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="151.0" layoutY="148.0" text="Last Name">
+      <Label layoutX="150.0" layoutY="127.0" text="Last Name">
          <font>
             <Font name="Comfortaa" size="14.0" />
          </font>
       </Label>
+      <Label fx:id="genLog" layoutX="226.0" layoutY="232.0">
+         <font>
+            <Font name="Comfortaa" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="92.0" layoutY="230.0" text="Generated login:">
+         <font>
+            <Font name="Comfortaa-Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="92.0" layoutY="273.0" text="Generated password:">
+         <font>
+            <Font name="Comfortaa-Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="genPw" layoutX="270.0" layoutY="275.0">
+         <font>
+            <Font name="Comfortaa" size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="109.0" layoutY="200.0" mnemonicParsing="false" onAction="#generateNew" text="Generate new">
+         <font>
+            <Font name="Comfortaa-Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="createClientbutton" layoutX="374.0" layoutY="306.0" mnemonicParsing="false" onAction="#newClient" prefHeight="48.0" prefWidth="111.0" text="Create client!">
+         <font>
+            <Font name="Comfortaa-Bold" size="15.0" />
+         </font>
+      </Button>
+      <Label layoutX="165.0" layoutY="173.0" text="E-mail">
+         <font>
+            <Font name="Comfortaa" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="email" layoutX="226.0" layoutY="168.0" />
    </children>
 </Pane>
