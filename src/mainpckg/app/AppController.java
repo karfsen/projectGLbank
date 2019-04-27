@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.Stage;
@@ -139,6 +140,7 @@ public class AppController {
         dropdown();
         clientLogin=db.selectUserLogin(getIDofSelectedClient());
         username.setText(clientLogin);
+        checkIfIBBlocked();
     }
 
     //method for select id of picked item in dropdown menu
@@ -348,8 +350,22 @@ public class AppController {
         }
     }
 
-    public void (){
+    public void blockIB(){
+        if(block.isSelected()){
+            Database db= Database.getInstance();
+            db.blockIB(getIDofSelectedClient());
+            System.out.println("Blocked ACC");
+        }
+        else{
+            System.out.println("unblocked acc");
+            Database db=Database.getInstance();
+            db.unblockIB(getIDofSelectedClient());
+        }
+    }
 
-
+    public void checkIfIBBlocked(){
+        Database db=Database.getInstance();
+        ArrayList<LoginHistory> loghis=db.last3Logins(getIDofSelectedClient());
+        System.out.println(loghis);
     }
 }

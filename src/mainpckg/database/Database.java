@@ -16,13 +16,14 @@ public class Database {
     public static final String insertAcc="INSERT into Account VALUES(id,?,?,amount)";
     public static final String getAccCards="SELECT * from Card INNER JOIN Account on card.ida=account.id where account.accnum like ?";
     public static final String updateMoney="UPDATE Account set amount=amount+? where AccNum like ?";
-    public static final String insertintotrans="INSERT INTO Transaction values(id,?,?,?,TransDate,TransAmount)";
+    public static final String insertintotrans="INSERT INTO Transaction(idAcc,RecAccount,idEmployee,TransAmount) values(?,?,?,?)";
     public static final String newClient="INSERT INTO Client values(id,?,?,?)";
     public static final String newLogin="INSERT INTO LoginClient values(id,?,?,MD5(?))";
     public static final String resetPassword="UPDATE LoginClient SET password=MD5(?) WHERE login=?";
     public static final String selectuser="SELECT login from LoginClient where idc=?";
-    public static final String blockIB="INSERT INTO LoginHistory(idc,Success) VALUES(?,NULL)";
-    public static final String unblockIB="INSERT INTO LoginHistory(idc,Success) VALUES(?,1)";
+    public static final String blockIB="INSERT INTO LoginHistory(idL,Success) VALUES((select id from LoginClient where idc=?),NULL)";
+    public static final String unblockIB="INSERT INTO LoginHistory(idL,Success) VALUES((select id from LoginClient where idc=?),1)";
+    public static final String get3Logins="SELECT * FROM LoginHistory WHERE idL=(select id from LoginClient where idc=?) ORDER BY LogDate desc LIMIT 3";
 
 
     private static Database db = new Database();
@@ -216,6 +217,7 @@ public class Database {
             inserttrans.setInt(1,id);
             inserttrans.setInt(2,id);
             inserttrans.setInt(3,empID);
+            inserttrans.setDouble(4,money);
             inserttrans.execute();
             con.close();
         } catch (SQLException e) {
@@ -323,24 +325,54 @@ public class Database {
         try{
             blockInBank=con.prepareStatement(blockIB);
             blockInBank.setInt(1,idc);
-            blockInBank.execute();
-
+            blockInBank.executeUpdate();
+            System.out.println(blockInBank);
         }catch (SQLException e){
             e.printStackTrace();
         }
     }
 
     public void unblockIB(int idc){
+
+
         Connection con= Globals.getConnection();
         PreparedStatement blockInBank;
         try{
             blockInBank=con.prepareStatement(unblockIB);
             blockInBank.setInt(1,idc);
-            blockInBank.execute();
-
+            blockInBank.executeUpdate();
+            System.out.println(blockInBank);
         }catch (SQLException e){
             e.printStackTrace();
         }
     }
 
+    public ArrayList<LoginHistory> last3Logins(int idc){
+        int id=0;
+        int idl=0;
+        String date="";
+        boolean success;
+
+        ArrayList<LoginHistory> loginHistories =new ArrayList<>();
+        Connection con=Globals.getConnection();
+        PreparedStatement sql=null;
+        try {
+            sql = con.prepareStatement(get3Logins);
+            sql.setInt(1, idc);
+
+            ResultSet rs = sql.executeQuery();
+
+            while (rs.next()) {
+                id=rs.getInt("id");
+                idl=rs.getInt("idl");
+                date=rs.getString("LogDate");
+                success=rs.getBoolean("Success");
+                LoginHistory loghistory=new LoginHistory(id,idl,date,success);
+                loginHistories.add(loghistory);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return loginHistories;
+    }
 }

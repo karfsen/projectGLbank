@@ -286,7 +286,7 @@
                                     <Font name="Comfortaa-Bold" size="20.0" />
                                  </font>
                               </Button>
-                              <CheckBox fx:id="block" layoutX="427.0" layoutY="150.0" mnemonicParsing="false" text="BLOCK INTERNET BANKING!">
+                              <CheckBox fx:id="block" layoutX="427.0" layoutY="150.0" mnemonicParsing="false" onAction="#blockIB" text="BLOCK INTERNET BANKING!">
                                  <font>
                                     <Font name="Comfortaa-Bold" size="15.0" />
                                  </font>

@@ -69,9 +69,7 @@ public class AddClientController {
             db.newClient(fname.getText(), lname.getText(), email.getText(), username, password);
             Stage stage = (Stage) createClientbutton.getScene().getWindow();
             stage.close();
-            AppController app=new AppController();
-            app.dropdown();
-        }catch(SQLException e){
+        }catch(Exception e){
             System.out.println(e);
         }
     }
