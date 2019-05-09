@@ -1,15 +1,10 @@
 package mainpckg.newclient;
-
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import mainpckg.Globals;
-import mainpckg.app.AppController;
 import mainpckg.database.Database;
 
-import java.sql.SQLException;
 
 public class AddClientController {
     public TextField fname;
@@ -19,6 +14,7 @@ public class AddClientController {
     public TextField lname;
     public TextField email;
     public Button createClientbutton;
+    public Label filledfield;
     String username;
     String password;
 
@@ -65,12 +61,18 @@ public class AddClientController {
 
     public void newClient() {
         Database db= Database.getInstance();
-        try {
-            db.newClient(fname.getText(), lname.getText(), email.getText(), username, password);
-            Stage stage = (Stage) createClientbutton.getScene().getWindow();
-            stage.close();
-        }catch(Exception e){
-            System.out.println(e);
+        if(fname.getText()!=""&&lname.getText()!=""&&email.getText()!="") {
+            try {
+                db.newClient(fname.getText(), lname.getText(), email.getText(), username, password);
+                Stage stage = (Stage) createClientbutton.getScene().getWindow();
+                filledfield.setVisible(false);
+                stage.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            filledfield.setVisible(true);
         }
     }
 }

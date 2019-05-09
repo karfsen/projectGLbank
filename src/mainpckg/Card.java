@@ -3,14 +3,14 @@ package mainpckg;
 public class Card {
 
     private int id;
-    private String accnum;
+    private int accid;
     private String PIN;
     private boolean active;
     private String expireDate;
 
-    public Card(int id,String accnum,String PIN,boolean active,String expireDate){
+    public Card(int id,int accnum,String PIN,boolean active,String expireDate){
         this.id=id;
-        this.accnum=accnum;
+        this.accid=accnum;
         this.PIN=PIN;
         this.active=active;
         this.expireDate=expireDate;
@@ -24,12 +24,12 @@ public class Card {
         this.id = id;
     }
 
-    public String getAccnum() {
-        return accnum;
+    public int getAccnum() {
+        return accid;
     }
 
-    public void setAccnum(String accnum) {
-        this.accnum = accnum;
+    public void setAccnum(int accnum) {
+        this.accid = accnum;
     }
 
     public String getPIN() {

@@ -194,9 +194,38 @@
                               </Label>
                               <Button layoutX="899.0" layoutY="59.0" mnemonicParsing="false" onAction="#newCard" text="New Card">
                                  <font>
-                                    <Font name="Comfortaa" size="12.0" />
+                                    <Font name="Comfortaa-Bold" size="12.0" />
                                  </font>
                               </Button>
+                              <CheckBox fx:id="newCardCheck" layoutX="886.0" layoutY="98.0" mnemonicParsing="false" text="Are you sure?">
+                                 <font>
+                                    <Font name="Comfortaa-Bold" size="12.0" />
+                                 </font></CheckBox>
+                              <Label fx:id="newCardLabel" layoutX="862.0" layoutY="129.0" text="This field must be checked" textFill="RED" visible="false">
+                                 <font>
+                                    <Font name="Comfortaa-Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button layoutX="527.0" layoutY="183.0" mnemonicParsing="false" onAction="#changePin" text="Change PIN">
+                                 <font>
+                                    <Font name="Comfortaa-Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                              <TextField fx:id="changePinInput" layoutX="636.0" layoutY="184.0" prefHeight="25.0" prefWidth="67.0" promptText="4 digits" visible="false">
+                                 <font>
+                                    <Font name="Comfortaa" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Button fx:id="submitChangePin" layoutX="703.0" layoutY="184.0" mnemonicParsing="false" onAction="#submitChangePin" prefHeight="25.0" prefWidth="58.0" text="Submit" visible="false">
+                                 <font>
+                                    <Font name="Comfortaa-Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="wrongInput" layoutX="647.0" layoutY="216.0" text="WRONG INPUT" textFill="RED" visible="false">
+                                 <font>
+                                    <Font name="Comfortaa-Bold" size="14.0" />
+                                 </font>
+                              </Label>
                            </children></AnchorPane>
                     </content>
                   </Tab>

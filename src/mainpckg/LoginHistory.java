@@ -4,9 +4,9 @@ public class LoginHistory {
     private int id;
     private int idl;
     private String datetime;
-    private boolean success;
+    String success;
 
-    public LoginHistory(int id, int idl, String datetime,boolean success){
+    public LoginHistory(int id, int idl, String datetime,String success){
         this.id=id;
         this.idl=idl;
         this.datetime=datetime;
@@ -37,11 +37,11 @@ public class LoginHistory {
         this.datetime = datetime;
     }
 
-    public boolean isSuccess() {
+    public String isSuccess() {
         return success;
     }
 
-    public void setSuccess(boolean success) {
+    public void setSuccess(String success) {
         this.success = success;
     }
 }

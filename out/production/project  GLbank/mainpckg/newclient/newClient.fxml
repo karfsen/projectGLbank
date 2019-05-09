@@ -61,5 +61,10 @@
          </font>
       </Label>
       <TextField fx:id="email" layoutX="226.0" layoutY="168.0" />
+      <Label fx:id="filledfield" layoutX="397.0" layoutY="117.0" text="Every field must be filled" textFill="RED" visible="false">
+         <font>
+            <Font name="Comfortaa-Bold" size="16.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

@@ -14,7 +14,7 @@ public class Database {
     public static final String getSelectedAccount="SELECT * from Account where id=?";
     public static final String checkAccNum="SELECT * from Account where AccNum=?";
     public static final String insertAcc="INSERT into Account VALUES(id,?,?,amount)";
-    public static final String getAccCards="SELECT * from Card INNER JOIN Account on card.ida=account.id where account.accnum like ?";
+    public static final String getAccCards="SELECT * from Card WHERE ida like ?";
     public static final String updateMoney="UPDATE Account set amount=amount+? where AccNum like ?";
     public static final String insertintotrans="INSERT INTO Transaction(idAcc,RecAccount,idEmployee,TransAmount) values(?,?,?,?)";
     public static final String newClient="INSERT INTO Client values(id,?,?,?)";
@@ -24,6 +24,8 @@ public class Database {
     public static final String blockIB="INSERT INTO LoginHistory(idL,Success) VALUES((select id from LoginClient where idc=?),NULL)";
     public static final String unblockIB="INSERT INTO LoginHistory(idL,Success) VALUES((select id from LoginClient where idc=?),1)";
     public static final String get3Logins="SELECT * FROM LoginHistory WHERE idL=(select id from LoginClient where idc=?) ORDER BY LogDate desc LIMIT 3";
+    public static final String newCard="INSERT INTO Card(ida,PIN,Active,ExpireM,ExpireY) VALUES(?,?,true,?,?)";
+    public static final String newPIN="UPDATE Card SET PIN=? WHERE id=?";
 
 
     private static Database db = new Database();
@@ -226,7 +228,7 @@ public class Database {
     }
 
 
-    public ArrayList<Card> AllCards(String AccNum){
+    public ArrayList<Card> AllCards(int accountid){
         ArrayList<Card> cards=new ArrayList<>();
 
         Connection con= Globals.getConnection();
@@ -234,11 +236,11 @@ public class Database {
 
         try {
             sqlPreparedStatement = con.prepareStatement(getAccCards);
-            sqlPreparedStatement.setString(1,AccNum);
+            sqlPreparedStatement.setInt(1,accountid);
             ResultSet rs = sqlPreparedStatement.executeQuery();
             while (rs.next()) {
                 int id=rs.getInt("id");
-                String  accnum=AccNum;
+                int  accid=accountid;
                 String PIN = rs.getString("pin");
                 boolean active  = rs.getBoolean("active");
                 String m= String.valueOf(rs.getInt("expirem"));
@@ -250,7 +252,7 @@ public class Database {
                     y="0"+y;
                 }
                 String expireDate=m+"/"+y;
-                Card card=new Card(id,accnum,PIN,active,expireDate);
+                Card card=new Card(id,accid,PIN,active,expireDate);
                 cards.add(card);
             }
             con.close();
@@ -351,7 +353,7 @@ public class Database {
         int id=0;
         int idl=0;
         String date="";
-        boolean success;
+        String success;
 
         ArrayList<LoginHistory> loginHistories =new ArrayList<>();
         Connection con=Globals.getConnection();
@@ -366,7 +368,7 @@ public class Database {
                 id=rs.getInt("id");
                 idl=rs.getInt("idl");
                 date=rs.getString("LogDate");
-                success=rs.getBoolean("Success");
+                success=rs.getString("Success");
                 LoginHistory loghistory=new LoginHistory(id,idl,date,success);
                 loginHistories.add(loghistory);
             }
@@ -374,5 +376,38 @@ public class Database {
             e.printStackTrace();
         }
         return loginHistories;
+    }
+
+    public void newCard(int ida,String PIN,int expirem,int expirey){
+        Connection con= Globals.getConnection();
+        PreparedStatement addclient;
+
+        try{
+            addclient=con.prepareStatement(newCard);
+            addclient.setInt(1,ida);
+            addclient.setString(2,PIN);
+            addclient.setInt(3,expirem);
+            addclient.setInt(4,expirey);
+            addclient.executeUpdate();
+            System.out.println("INSERTED NEW CARD");
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void changePIN(String newPin,int idCard){
+        Connection con= Globals.getConnection();
+        PreparedStatement resetpw;
+
+        try {
+            resetpw = con.prepareStatement(newPIN);
+            resetpw.setString(1, newPin);
+            resetpw.setInt(2, idCard);
+            System.out.println(resetpw);
+            resetpw.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }

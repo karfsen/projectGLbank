@@ -1,30 +1,19 @@
 package mainpckg.app;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.Stage;
 import mainpckg.*;
 import mainpckg.database.Database;
 import mainpckg.newclient.AddClientController;
-
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class AppController {
@@ -54,6 +43,10 @@ public class AppController {
     public Label expireLabel;
     public Label activeLabel;
     public Button newClient;
+    public CheckBox newCardCheck;
+    public Label newCardLabel;
+    public TextField changePinInput;
+    public Button submitChangePin;
 
     //transaction tab
     public TextField depositInput;
@@ -71,6 +64,9 @@ public class AppController {
     public Label username;
     public CheckBox block;
     public CheckBox resetCheck;
+    public Label wrongInput;
+
+
     int count=0;
     public String clientLogin;
 
@@ -152,7 +148,7 @@ public class AppController {
     }
 
     public int getIDofSelectedAccount() {
-        System.out.println(acc_drop.getSelectionModel().getSelectedIndex());
+        //System.out.println(acc_drop.getSelectionModel().getSelectedIndex());
         int boxindex = acc_drop.getSelectionModel().getSelectedIndex();
         return accounts.get(boxindex).id;
     }
@@ -162,10 +158,10 @@ public class AppController {
         return boxindex;
     }
 
-    public String getIDofSelectedAccountInCards() {
+    public int getIDofSelectedAccountInCards() {
         int boxindex = cardaccdrop.getSelectionModel().getSelectedIndex();
         System.out.println(accounts.get(boxindex).id);
-        return accounts.get(boxindex).AccNum;
+        return accounts.get(boxindex).id;
     }
 
     //method for set up dropdown menu of accounts of selected user
@@ -189,7 +185,8 @@ public class AppController {
         Account account = db.getSelectedAccOfClient(getIDofSelectedAccount());
         accIdLabel.setText(String.valueOf(account.id));
         accNumLabel.setText(account.AccNum);
-        accBalLabel.setText(account.amount + "  €");
+        double d=Math.floor(account.amount*100)/100;
+        accBalLabel.setText(d+" €");
     }
 
     public void createAccount() throws SQLException {
@@ -261,66 +258,55 @@ public class AppController {
 
 
     public void depositMoney() {
-        try {
-            double d = Math.round((Double.parseDouble(depositInput.getText())) * 100.0) / 100.0;
-            System.out.println("257:" + d);
-            if (d != 0) {
-                if (depositCheck.isSelected()) {
-                    if (d > 0) {
+        double d = Math.floor((Double.parseDouble(depositInput.getText())) * 100.0) / 100.0;
+        if(d>0) {
+            try {
+                System.out.println("deposit money input: "+d);
+                    if (depositCheck.isSelected()) {
                         String accnum = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).AccNum;
                         int id = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).id;
                         Database db = Database.getInstance();
                         db.updateAccMoney(person.id, id, accnum, d);
                         notCheckedDep.setVisible(false);
                         depZero.setVisible(false);
+                        AccInfo();
                     } else {
-                        depZero.setVisible(true);
                         notCheckedDep.setVisible(true);
                     }
-                } else {
-                    depZero.setVisible(true);
-                    notCheckedDep.setVisible(true);
-                }
-            } else {
-                depZero.setVisible(true);
-                notCheckedDep.setVisible(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Deposit error occured");
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        }
+        else{
             depZero.setVisible(true);
-            notCheckedDep.setVisible(true);
         }
     }
 
     public void withdrawMoney() {
-        double d = Math.round(-1 * (Double.parseDouble(withdrawInput.getText())) * 100.0) / 100.0;
-        if (accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).amount-d > -60) {
+        double d = Math.floor(-1 * (Double.parseDouble(withdrawInput.getText())) * 100.0) / 100.0;
+        if (accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).amount-d > -60.0) {
+            System.out.println("Withdraw money input: "+d);
             try {
-                System.out.println("291: " + d);
-                if (d != 0) {
-                    if (withdrawCheck.isSelected() == true) {
-                        if (d > 0) {
-                            d = -d;
-                            System.out.println("281: " + d);
-                        }
-                        String accnum = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).AccNum;
-                        int id = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).id;
-                        Database db = Database.getInstance();
-                        db.updateAccMoney(person.id, id, accnum, d);
-                        notCheckedWithdraw.setVisible(false);
-                        witZero.setVisible(false);
+                if (withdrawCheck.isSelected() == true) {
+                    if (d > 0) {
+                        d = -1*d;
+                    }
+                    System.out.println("Withdrawing "+d+" € from "+accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).amount+" from selected account");
+                    String accnum = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).AccNum;
+                    int id = accounts.get(transactionDropdown.getSelectionModel().getSelectedIndex()).id;
+                    System.out.println(accnum+" "+id);
+                    Database db = Database.getInstance();
+                    db.updateAccMoney(person.id, id, accnum, d);
+                    notCheckedWithdraw.setVisible(false);
+                    witZero.setVisible(false);
+                    AccDropDown();
                     } else {
                         notCheckedWithdraw.setVisible(true);
-                        witZero.setVisible(true);
                     }
-                } else {
-                    witZero.setVisible(true);
-                    notCheckedWithdraw.setVisible(true);
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-                witZero.setVisible(true);
-                notCheckedDep.setVisible(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Withdraw error occured");
             }
             lowmoney.setVisible(false);
         }
@@ -331,8 +317,29 @@ public class AppController {
     }
 
     public void newCard() {
+        int accid=getIDofSelectedAccountInCards();
+        System.out.println(accid);
+        String PIN = "";
+        int month= new Date().getMonth()+1;
+        System.out.println(month);
+        Calendar now=Calendar.getInstance();
+        int year=now.get(Calendar.YEAR)+3-2000;
+        System.out.println(year);
+        for (int i = 0; i < 4; i++) {
+            Random r = new Random();
+            PIN = PIN + r.nextInt(10);
+        }
+        System.out.println(PIN);
 
-
+        if(newCardCheck.isSelected()){
+            Database db=Database.getInstance();
+            db.newCard(accid,PIN,month,year);
+            newCardLabel.setVisible(false);
+            CardDropdown();
+        }
+        else{
+            newCardLabel.setVisible(true);
+        }
     }
 
     public void resetPW() {
@@ -366,6 +373,49 @@ public class AppController {
     public void checkIfIBBlocked(){
         Database db=Database.getInstance();
         ArrayList<LoginHistory> loghis=db.last3Logins(getIDofSelectedClient());
-        System.out.println(loghis);
+        System.out.println(loghis.get(0).isSuccess());
+        if(loghis.get(0).isSuccess()=="1"){
+            block.setSelected(false);
+        }
+
+        else if(loghis.get(0).isSuccess()==null){
+            block.setSelected(true);
+        }
+        else if(loghis.get(0).isSuccess()=="0"){
+            if(loghis.get(1).isSuccess()=="0"){
+                if(loghis.get(2).isSuccess()=="0"){
+                    block.setSelected(true);
+                }
+                else{
+                    block.setSelected(false);
+                }
+            }
+            else{
+                block.setSelected(false);
+            }
+        }
+        else{
+            block.setSelected(false);
+        }
+    }
+
+    public void changePin() {
+        submitChangePin.setVisible(true);
+        changePinInput.setVisible(true);
+    }
+
+    public void submitChangePin() {
+        String PIN = changePinInput.getText();
+        int idcard=cards.get(getIDofSelectedCard()).getId();
+
+            if (PIN.matches("[0-9]+") && PIN.length() == 4){
+                System.out.println(PIN);
+                wrongInput.setVisible(false);
+                Database db=Database.getInstance();
+                db.changePIN(PIN,idcard);
+            }
+            else {
+                wrongInput.setVisible(true);
+            }
     }
 }
