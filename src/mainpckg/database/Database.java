@@ -7,25 +7,25 @@ import java.util.ArrayList;
 
 public class Database {
 
-    public static final String checkUser="SELECT Employee.id as id,Employee.fname as fname,Employee.lname as lname,Positions.name as posname from LoginEmp INNER JOIN Employee on LoginEmp.ide=Employee.id INNER JOIN Positions on Employee.position=Positions.id where login like ? and password like ?";
-    public static final String getClients="SELECT id,fname,lname from Client";
-    public static final String getClientInfo="Select id,fname,lname,email from Client where id=?";
-    public static final String getUserAccounts="SELECT * from Account where idc=?";
-    public static final String getSelectedAccount="SELECT * from Account where id=?";
-    public static final String checkAccNum="SELECT * from Account where AccNum=?";
-    public static final String insertAcc="INSERT into Account VALUES(id,?,?,amount)";
-    public static final String getAccCards="SELECT * from Card WHERE ida like ?";
-    public static final String updateMoney="UPDATE Account set amount=amount+? where AccNum like ?";
-    public static final String insertintotrans="INSERT INTO Transaction(idAcc,RecAccount,idEmployee,TransAmount) values(?,?,?,?)";
-    public static final String newClient="INSERT INTO Client values(id,?,?,?)";
-    public static final String newLogin="INSERT INTO LoginClient values(id,?,?,MD5(?))";
-    public static final String resetPassword="UPDATE LoginClient SET password=MD5(?) WHERE login=?";
-    public static final String selectuser="SELECT login from LoginClient where idc=?";
-    public static final String blockIB="INSERT INTO LoginHistory(idL,Success) VALUES((select id from LoginClient where idc=?),NULL)";
-    public static final String unblockIB="INSERT INTO LoginHistory(idL,Success) VALUES((select id from LoginClient where idc=?),1)";
-    public static final String get3Logins="SELECT * FROM LoginHistory WHERE idL=(select id from LoginClient where idc=?) ORDER BY LogDate desc LIMIT 3";
-    public static final String newCard="INSERT INTO Card(ida,PIN,Active,ExpireM,ExpireY) VALUES(?,?,true,?,?)";
-    public static final String newPIN="UPDATE Card SET PIN=? WHERE id=?";
+    public static final String checkUser="SELECT employee.id as id,employee.fname as fname,employee.lname as lname,positions.name as posname from loginemp INNER JOIN employee on loginemp.ide=employee.id INNER JOIN positions on employee.position=positions.id where login like ? and password like ?";
+    public static final String getClients="SELECT id,fname,lname from client";
+    public static final String getClientInfo="Select id,fname,lname,email from client where id=?";
+    public static final String getUserAccounts="SELECT * from account where idc=?";
+    public static final String getSelectedAccount="SELECT * from account where id=?";
+    public static final String checkAccNum="SELECT * from account where accnum=?";
+    public static final String insertAcc="INSERT into account VALUES(id,?,?,amount)";
+    public static final String getAccCards="SELECT * from card WHERE ida like ?";
+    public static final String updateMoney="UPDATE account set amount=amount+? where accnum like ?";
+    public static final String insertintotrans="INSERT INTO transaction(idacc,recaccount,idemployee,transamount) values(?,?,?,?)";
+    public static final String newClient="INSERT INTO client values(id,?,?,?)";
+    public static final String newLogin="INSERT INTO loginclient values(id,?,?,MD5(?))";
+    public static final String resetPassword="UPDATE loginclient SET password=MD5(?) WHERE login=?";
+    public static final String selectuser="SELECT login from loginclient where idc=?";
+    public static final String blockIB="INSERT INTO loginhistory(idl,success) VALUES((select id from loginclient where idc=?),NULL)";
+    public static final String unblockIB="INSERT INTO loginhistory(idl,success) VALUES((select id from loginclient where idc=?),1)";
+    public static final String get3Logins="SELECT * FROM loginhistory WHERE idl=(select id from loginclient where idc=?) ORDER BY logdate desc LIMIT 3";
+    public static final String newCard="INSERT INTO card(ida,pin,active,expirem,expirey) VALUES(?,?,true,?,?)";
+    public static final String newPIN="UPDATE card SET pin=? WHERE id=?";
 
 
     private static Database db = new Database();

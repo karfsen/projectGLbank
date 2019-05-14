@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class Globals {
 
-    public static final String username="root";
-    public static final String password="";
-    public static final String url = "jdbc:mysql://localhost:3306/glbank";
+    public static final String username="glbank";
+    public static final String password="password";
+    public static final String url = "jdbc:mysql://itsovy.sk:3306/glbank";
 
     public static Connection getConnection(){
         Connection connection;
