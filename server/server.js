@@ -20,6 +20,7 @@ app.post('/login',(req,res,callbackL)=>{
   console.log("Request on /login");
   callbackL=function(status,value){
     res.status(status).send(value);
+    console.log(tokens);
   };
 
 
@@ -46,6 +47,7 @@ app.post('/login',(req,res,callbackL)=>{
     //console.log(sql);
 
     con.query(sql,(err,res)=>{
+      console.log(res);
       if(err) console.log(err);
       if(res.length==0){
       console.log("User: "+name+" with password: "+pw+" is not in database");
@@ -53,21 +55,20 @@ app.post('/login',(req,res,callbackL)=>{
       con.query(attempt,(req)=>{
         if (err) console.log(err);
       });
-
-      callbackL(401,"Incorrect Username or password!");
+      let mess=new Object;
+      mess.message="User with this password doesn't exist!";
+      callbackL(401,JSON.stringify(mess));
       }
       else{
-        for(let i=0;i<tokens.length;i++){
-          if(tokens[i].username=name){
-            tokens.splice(i,1);
-          }          
-        }
+        tokens=tokens.filter(person => person.username != name);
         let id=res[0].id;
+        console.log(id);
         console.log("User: "+name+" with password: "+pw+" is in database");
         let blocksql="SELECT * FROM loginhistory WHERE idl="+id+" ORDER BY logdate desc LIMIT 3;";
         con.query(blocksql,(err,res)=>{
+          //console.log(res.body);
           if(err) console.log(err);
-          console.log("ehm nejde"+res);
+          console.log(res);
           if(res.length==0 || res[0].Success==1 || (res[0].Success==0 && res[1].Success==1) || (res[0].Success==0 && res[1].Success==0 && res[2].Success==1)){
             let attempt="INSERT INTO loginhistory VALUES(id,"+id+",CURRENT_TIMESTAMP,1);";
             con.query(attempt,()=>{
@@ -81,17 +82,18 @@ app.post('/login',(req,res,callbackL)=>{
             callbackL(200,JSON.stringify(obj));
           }
           else{
-            callbackL(401,"LUL ma 3 po sebe špatne");
+            let mess=new Object;
+            mess.message="User has been blocked!";
+            callbackL(401,JSON.stringify(mess));
           }
         });
       }
       con.end();
-      console.log(tokens);
     });
   }); 
 });
 
-//posielame json v ktorom je username a token , ak je spravny nereturnne nič iba 200 kod a hlašku logged off
+//posielame json v ktorom je username a token , ak je spravny returnne 200 a json s messagom
 
 app.post('/logout',(req,res,callbackout)=>{
   console.log("Request on /logout");
@@ -102,21 +104,50 @@ app.post('/logout',(req,res,callbackout)=>{
   
   let name=req.body.username;
   let token=req.body.token;
+  tokens=tokens.filter(person => person.username != name);
+  let obj=new Object();
+  obj.name=name;
+  obj.token=token;
+  let mess=new Object;
+  mess.message="User has been logged off!";
+  callbackout(200,JSON.stringify(mess));
+  console.log(tokens);
+});
+
+app.post('/userinfo',(req,res,callbackUI)=>{
+  console.log("Request on /userinfo");
+
+  callbackUI=function(status,value){
+    res.status(status).send(value);
+  }
+
+  let name=req.body.username;
+  let token=req.body.token;
   let obj=new Object();
   obj.name=name;
   obj.token=token;
   for(let i=0;i<tokens.length;i++){
-    if((tokens[i].username=name) && (tokens[i].token=token)){
-      tokens.splice(i,1);
-      callbackout(200,"Logout Successful");
-      break;
-    }
-    else{
-      callbackout(401,"Wrong tokens!");
+    if(tokens[i]==obj){
+      let sql=" SELECT fname,lname,email from client INNER JOIN loginclient on client.id=loginclient.idc where login like '"+name+"';";
+      con.query(sql,(err,res)=>{
+        if(err) console.log(err);
+        if(res.length==0){
+          console.log("User: "+name+" with password: "+pw+" is not in database");
+          let mess=new Object;
+          mess.message="User has been blocked!";
+          callbackUI(401,JSON.stringify(mess));
+        }
+        else{
+
+        }
+      });
+
+
+      callbackUI(200,);
       break;
     }
   }
-  console.log(tokens);
 });
+
 
 app.listen(3000);
