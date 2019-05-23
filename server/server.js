@@ -179,8 +179,8 @@ app.post('/accounts',(req,res,callbackUI)=>{
   }
 });
 
-app.post('/accountinfo',(req,res,callbackUI)=>{
-  console.log("Request on /accountinfo");
+app.post('/accinfo',(req,res,callbackUI)=>{
+  console.log("Request on /accinfo");
 
   callbackUI=function(status,value){
     res.status(status).send(value);
@@ -188,6 +188,7 @@ app.post('/accountinfo',(req,res,callbackUI)=>{
 
   let name=req.body.username;
   let token=req.body.token;
+  let accnum=req.body.accnum
   console.log(name+" "+token);
   if(tokens.find(person => (person.username ==name && person.token==token))){
     let sql="SELECT * from account where AccNum='"+accnum+"';";
@@ -211,10 +212,10 @@ app.post('/accountinfo',(req,res,callbackUI)=>{
 });
 
 
-app.post('/cards',(req,res,callbackTH)=>{
+app.post('/cards',(req,res,callbackc)=>{
   console.log("Request on /card");
 
-  callbackTH=function(status,value){
+  callbackc=function(status,value){
     res.status(status).send(value);
   }
 
@@ -230,30 +231,30 @@ app.post('/cards',(req,res,callbackTH)=>{
       if(res.length==0){
       console.log("User: "+name+" with token: "+token+" is not logged in");
       let mess=new Object;
-      mess.message="Transaction history is empty!";
-      callbackTH(403,JSON.stringify(mess));
+      mess.message="User has no cards yet!";
+      callbackc(403,JSON.stringify(mess));
       }
       else{
         console.log("User: "+name+" with token: "+token+" is logged in");
-        callbackTH(200,JSON.stringify(res));
+        callbackc(200,JSON.stringify(res));
       }
     });
   }
   else{
-    callbackTH(401,JSON.stringify({message:"Wrong user credintials!"}));
+    callbackc(401,JSON.stringify({message:"Wrong user credintials!"}));
   }
 });
 
-app.post('/cardinfo',(req,res,callbackTH)=>{
-  console.log("Request on /card");
+app.post('/cardinfo',(req,res,callbackci)=>{
+  console.log("Request on /cardinfo");
 
-  callbackTH=function(status,value){
+  callbackci=function(status,value){
     res.status(status).send(value);
   }
 
   let name=req.body.username;
   let token=req.body.token;
-  let idAcc=req.body.idacc;
+  let idCard=req.body.idCard;
 
   console.log(name+" "+token);
   if(tokens.find(person => (person.username ==name && person.token==token))){
@@ -263,20 +264,77 @@ app.post('/cardinfo',(req,res,callbackTH)=>{
       if(res.length==0){
       console.log("User: "+name+" with token: "+token+" is not logged in");
       let mess=new Object;
-      mess.message="Transaction history is empty!";
-      callbackTH(403,JSON.stringify(mess));
+      mess.message="This card doesnt exist!";
+      callbackci(403,JSON.stringify(mess));
       }
       else{
         console.log("User: "+name+" with token: "+token+" is logged in");
-        callbackTH(200,JSON.stringify(res));
+        callbackci(200,JSON.stringify(res));
       }
     });
   }
   else{
-    callbackTH(401,JSON.stringify({message:"Wrong user credintials!"}));
+    callbackci(401,JSON.stringify({message:"Wrong user credintials!"}));
   }
 });
 
+app.post('/cardtrans',(req,res,callbackct)=>{
+  console.log("Request on /cardtrans");
+
+  callbackct=function(status,value){
+    res.status(status).send(value);
+  }
+
+  let name=req.body.username;
+  let token=req.body.token;
+  let idCard=req.body.idCard;
+
+  console.log(name+" "+token);
+  if(tokens.find(person => (person.username ==name && person.token==token))){
+    let sql="select * from cardtrans where idCard like'"+idCard+"';";
+    con.query(sql,(err,res)=>{
+      if(err) console.log(err);
+      if(res.length==0){
+      console.log("User: "+name+" with token: "+token+" is not logged in");
+      let mess=new Object;
+      mess.message="Card transaction history is empty!";
+      callbackct(403,JSON.stringify(mess));
+      }
+      else{
+        console.log("User: "+name+" with token: "+token+" is logged in");
+        callbackct(200,JSON.stringify(res));
+      }
+    });
+  }
+  else{
+    callbackct(401,JSON.stringify({message:"Wrong user credintials!"}));
+  }
+});
+
+app.post('/blockcard',(req,res,callbackbc)=>{
+  console.log("Request on /blockcard");
+
+  callbackbc=function(status,value){
+    res.status(status).send(value);
+  }
+
+  let name=req.body.username;
+  let token=req.body.token;
+  let idCard=req.body.idCard;
+
+  console.log(name+" "+token);
+  if(tokens.find(person => (person.username ==name && person.token==token))){
+    let sql="update cards set blocked=1 where id="+idCard+";";
+    con.query(sql,(err,res)=>{
+      if(err) console.log(err);
+        console.log("User: "+name+" with token: "+token+" is logged in");
+        callbackbc(200,JSON.stringify(res));
+      });
+  }
+  else{
+    callbackbc(401,JSON.stringify({message:"Wrong user credintials!"}));
+  }
+});
 
 app.post('/transhistory',(req,res,callbackTH)=>{
   console.log("Request on /transhistory");
@@ -288,10 +346,11 @@ app.post('/transhistory',(req,res,callbackTH)=>{
   let name=req.body.username;
   let token=req.body.token;
   let id=req.body.idacc;
+  let accnum=req.body.accnum;
 
   console.log(name+" "+token);
   if(tokens.find(person => (person.username ==name && person.token==token))){
-    let sql="SELECT * from transaction where idacc="+id+" or recaccount="+id+" ;";
+    let sql="SELECT * from transaction where idacc="+id+" or recaccount="+accnum+" ;";
     con.query(sql,(err,res)=>{
       if(err) console.log(err);
       if(res.length==0){
@@ -311,6 +370,44 @@ app.post('/transhistory',(req,res,callbackTH)=>{
   }
 });
 
+app.post('/changepassword',(req,res,callbackchpw)=>{
+  console.log("Request on /changepassword");
 
+  callbackchpw=function(status,value){
+    res.status(status).send(value);
+  }
+
+  let name=req.body.username;
+  let token=req.body.token;
+  let oldpw=req.body.oldpassword;
+  let newpw=req.body.newpassword;
+
+  console.log(name+" "+token);
+  if(tokens.find(person => (person.username ==name && person.token==token))){
+    let sql="SELECT id,login,password FROM loginclient "+
+    "WHERE login like '"+name+"' "+      
+    "and password like md5('"+oldpw+"');";;
+    con.query(sql,(err,res)=>{
+      if(err) console.log(err);
+      if(res.length==0){
+      console.log("User: "+name+" with token: "+token+" is not logged in");
+      let mess=new Object;
+      mess.message="Wrong credintials";
+      callbackchpw(403,JSON.stringify(mess));
+      }
+      else{
+        console.log("User: "+name+" with token: "+token+" is logged in");
+        let sql2="update loginclient set password='"+newpw+"' where name like '"+name+"';";
+        con.query(sql2,(err)=>{
+          if (err) console.log(err);
+          callbackchpw(200,JSON.stringify({message:"Password changed succesfully!"}));
+        });
+      }
+    });
+  }
+  else{
+    callbackchpw(401,JSON.stringify({message:"Wrong user credintials!"}));
+  }
+});
 
 app.listen(3000);
