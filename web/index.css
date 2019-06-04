@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+
+body,html {
+
+height:100%;
+width:100%;
+margin:0;
+padding: 0;
+background:#E9E9E9;
+font-family: 'Roboto', sans-serif;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+#main {
+
+/*background: red;*/
+width:100%;
+height:100%;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+
+}
+
+span{
+
+padding-bottom: 0.5%;
+padding-top: 0.5%;
+
+}
+
+.username,.password {
+
+height:30px;
+width:250px;
+margin-top:9%;
+border:2.5px solid #D7D7D7;
+border-radius:6px;
+font-size:0.8em;
+-webkit-transition: border .35s ease-in-out;
+transition: border .35s ease-in-out;
+text-indent: 4px;
+
+}
+
+.username:focus,.password:focus {
+
+border:2.5px solid #2CC779;
+
+}
+
+#submitBtn {
+
+height:40px;
+width:255px;
+margin-top:9%;
+outline:none;
+border:none;
+border:3px solid #F77545;
+border-radius:1px;
+background: white;
+font-size:1.4rem;
+color:#F77545;
+-webkit-transition: border 0.5s ease, color 0.5s ease; /* For Safari 3.1 to 6.0 */
+transition: border 0.5s ease,color 0.5s ease;
+
+}
+
+#submitBtn:hover {
+
+border:3px solid #AB441F;
+color:#AB441F;
+
+}
+
+#formWrap {
+
+	/*background:red;*/
+	height:100%;
+	width:24%;
+	display: flex;
+	flex-direction: column;
+
+}
+
+#forLogo{
+
+	width:100%;
+	height:15em;
+	background:#F77545;
+	align-self: auto ;
+	margin-top:5rem;
+
+}
+
+.space {
+
+	height:4em;
+	width:100%;
+	/*background: red;*/
+
+}
+
+#form {
+
+	background:white;
+	height:42%;
+	width:100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+
+}
+
+.upBar {
+	
+	width:100%;
+	height:15%;
+	min-height:80px;
+	background:#F77545;
+	align-self:flex-start;
+
+}
+
+::-webkit-input-placeholder { /* Edge */
+  color: #D1D1D1;
+  font-size:1.1em;
+  text-indent: 4px;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+ font-size:1.1em;
+}
+
+::placeholder {
+  color: #D1D1D1;
+  font-size:1.1em;
+}
+
+#errorWrap {
+
+width:100%;
+height:2em;
+display:flex;
+align-items: center;
+justify-content: center;
+margin-top:5%;
+font-size:1.2em;
+color:#E04834;
+
+
+}

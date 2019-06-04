@@ -14,7 +14,7 @@ let con=mysql.createConnection({
   database: "glbank",
   port: "3306"
 });
-
+con.connect();
 //Definuje token generaciu(pomocou knižnice na tokeny)
 const tokgen = new TokenGenerator(128, TokenGenerator.BASE62);
 //console.log(tokgen);
@@ -35,11 +35,6 @@ app.post('/login',(req,res,callbackL)=>{
   let name=req.body.username;
   let pw=req.body.password;
   let token="";
-
-  con.connect((err)=>{
-
-    if (err) console.log(err);            
-    //console.log("connected");
       
     let sql="SELECT id,login,password FROM loginclient "+
     "WHERE login like '"+name+"' "+      
@@ -88,8 +83,7 @@ app.post('/login',(req,res,callbackL)=>{
           }
         });
       }
-    });
-  }); 
+    }); 
 });
 
 //posielame json v ktorom je username a token , ak je spravny returnne 200 a json s messagom
@@ -291,7 +285,8 @@ app.post('/cardtrans',(req,res,callbackct)=>{
 
   console.log(name+" "+token);
   if(tokens.find(person => (person.username ==name && person.token==token))){
-    let sql="select * from cardtrans where idCard like'"+idCard+"';";
+    let sql="select * from cardtrans where idCard like '"+idCard+"';";
+    console.log(sql);
     con.query(sql,(err,res)=>{
       if(err) console.log(err);
       if(res.length==0){
@@ -397,7 +392,7 @@ app.post('/changepassword',(req,res,callbackchpw)=>{
       }
       else{
         console.log("User: "+name+" with token: "+token+" is logged in");
-        let sql2="update loginclient set password='"+newpw+"' where name like '"+name+"';";
+        let sql2="update loginclient set password=md5('"+newpw+"') where name like '"+name+"';";
         con.query(sql2,(err)=>{
           if (err) console.log(err);
           callbackchpw(200,JSON.stringify({message:"Password changed succesfully!"}));
@@ -409,5 +404,4 @@ app.post('/changepassword',(req,res,callbackchpw)=>{
     callbackchpw(401,JSON.stringify({message:"Wrong user credintials!"}));
   }
 });
-
 app.listen(3000);
